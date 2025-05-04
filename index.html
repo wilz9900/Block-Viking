@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Block Viking - Wilz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #1d2671, #c33764);
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    .container {
+      padding: 50px;
+      animation: fadeIn 1s ease;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 3em;
+    }
+
+    .subtitle {
+      font-size: 1.2em;
+      color: #ffdddd;
+      margin-bottom: 40px;
+    }
+
+    .game-options {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      animation: slideIn 1s ease-in-out;
+    }
+
+    .game-button {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid #fff;
+      border-radius: 12px;
+      padding: 20px 30px;
+      font-size: 1.2em;
+      cursor: pointer;
+      transition: transform 0.3s, background 0.3s;
+    }
+
+    .game-button:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.05);
+    }
+
+    .game-section {
+      display: none;
+      margin-top: 40px;
+      animation: fadeIn 1s ease;
+    }
+
+    .show {
+      display: block;
+    }
+
+    .block {
+      width: 50px;
+      height: 50px;
+      margin: 5px;
+      background: #fff;
+      color: #333;
+      font-size: 2em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 10px;
+      transition: background 0.2s;
+    }
+
+    .block:hover {
+      background: #e0e0e0;
+    }
+
+    #status {
+      font-size: 1.4em;
+      margin-top: 20px;
+    }
+
+    .back-btn {
+      margin-top: 30px;
+      background: #00000055;
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: none;
+      color: #fff;
+      font-size: 1em;
+      cursor: pointer;
+    }
+
+    .footer {
+      margin-top: 60px;
+      font-size: 1em;
+      color: #ccc;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Block Viking</h1>
+    <div class="subtitle">Pilih mode permainan</div>
+
+    <div class="game-options">
+      <div class="game-button" onclick="openGame('mode1')">Mode 1</div>
+      <div class="game-button" onclick="openGame('mode2')">Mode 2</div>
+    </div>
+
+    <!-- Mode 1 -->
+    <div id="mode1" class="game-section">
+      <h2>Mode 1: Blok Viking</h2>
+      <div id="blocks1"></div>
+      <div id="status1">Status: Menunggu...</div>
+      <button class="back-btn" onclick="backToMenu()">Kembali ke Menu</button>
+    </div>
+
+    <!-- Mode 2 -->
+    <div id="mode2" class="game-section">
+      <h2>Mode 2: Blok Viking</h2>
+      <div id="blocks2"></div>
+      <div id="status2">Status: Menunggu...</div>
+      <button class="back-btn" onclick="backToMenu()">Kembali ke Menu</button>
+    </div>
+
+    <div class="footer">Dibuat oleh Wilz - 2025</div>
+  </div>
+
+  <script>
+    function openGame(mode) {
+      document.querySelector('.game-options').style.display = 'none';
+      document.getElementById(mode).classList.add('show');
+      initGame(mode);
+    }
+
+    function backToMenu() {
+      document.querySelector('.game-options').style.display = 'flex';
+      document.querySelectorAll('.game-section').forEach(section => section.classList.remove('show'));
+    }
+
+    function initGame(mode) {
+      const blocksContainer = document.getElementById('blocks' + mode.charAt(mode.length - 1));
+      blocksContainer.innerHTML = '';
+      const blockCount = mode === 'mode1' ? 5 : 6;
+      for (let i = 0; i < blockCount; i++) {
+        const block = document.createElement('div');
+        block.classList.add('block');
+        block.textContent = i + 1;
+        block.onclick = () => handleBlockClick(block, mode);
+        blocksContainer.appendChild(block);
+      }
+      document.getElementById('status' + mode.charAt(mode.length - 1)).textContent = 'Status: Siap!';
+    }
+
+    function handleBlockClick(block, mode) {
+      const statusElement = document.getElementById('status' + mode.charAt(mode.length - 1));
+      statusElement.textContent = 'Status: Blok ' + block.textContent + ' diklik!';
+      block.style.backgroundColor = '#4CAF50';
+      setTimeout(() => {
+        block.style.backgroundColor = '#fff';
+        statusElement.textContent = 'Status: Menunggu...';
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
