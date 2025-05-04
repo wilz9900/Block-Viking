@@ -1,183 +1,159 @@
-<!DOCTYPE html>
-<html lang="id">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Block Viking - Wilz</title>
+  <title>Block Viking</title>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #1d2671, #c33764);
-      color: #fff;
       margin: 0;
-      padding: 0;
-      text-align: center;
-    }
-
-    .container {
-      padding: 50px;
-      animation: fadeIn 1s ease;
-    }
-
-    h1 {
-      margin-bottom: 20px;
-      font-size: 3em;
-    }
-
-    .subtitle {
-      font-size: 1.2em;
-      color: #ffdddd;
-      margin-bottom: 40px;
-    }
-
-    .game-options {
+      font-family: 'Arial', sans-serif;
+      background-color: #2863a5;
       display: flex;
-      justify-content: center;
-      gap: 20px;
-      animation: slideIn 1s ease-in-out;
-    }
-
-    .game-button {
-      background: rgba(255, 255, 255, 0.1);
-      border: 2px solid #fff;
-      border-radius: 12px;
-      padding: 20px 30px;
-      font-size: 1.2em;
-      cursor: pointer;
-      transition: transform 0.3s, background 0.3s;
-    }
-
-    .game-button:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: scale(1.05);
-    }
-
-    .game-section {
-      display: none;
-      margin-top: 40px;
-      animation: fadeIn 1s ease;
-    }
-
-    .show {
-      display: block;
-    }
-
-    .block {
-      width: 50px;
-      height: 50px;
-      margin: 5px;
-      background: #fff;
-      color: #333;
-      font-size: 2em;
-      display: inline-flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      border-radius: 10px;
-      transition: background 0.2s;
+      color: white;
     }
-
-    .block:hover {
-      background: #e0e0e0;
+    .header {
+      text-align: center;
+      padding: 20px;
     }
-
-    #status {
-      font-size: 1.4em;
+    .header h1 {
+      font-size: 3em;
+      margin: 0;
+      color: #ffd700;
+    }
+    .header p {
+      margin-top: 5px;
+      font-size: 1.2em;
+    }
+    .button-container {
+      display: flex;
+      gap: 20px;
       margin-top: 20px;
     }
-
-    .back-btn {
-      margin-top: 30px;
-      background: #00000055;
-      padding: 10px 20px;
-      border-radius: 10px;
+    .btn {
+      padding: 15px 30px;
+      font-size: 1.2em;
       border: none;
-      color: #fff;
-      font-size: 1em;
+      border-radius: 10px;
       cursor: pointer;
+      background-color: #ffcc00;
+      color: #000;
     }
-
-    .footer {
-      margin-top: 60px;
-      font-size: 1em;
-      color: #ccc;
+    .btn:hover {
+      background-color: #ffaa00;
     }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+    .game-board {
+      margin-top: 30px;
+      background-color: #13233a;
+      width: 360px;
+      height: 360px;
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      grid-template-rows: repeat(9, 1fr);
+      gap: 2px;
+      padding: 5px;
+      border-radius: 10px;
     }
-
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateY(-30px); }
-      to { opacity: 1; transform: translateY(0); }
+    .cell {
+      width: 100%;
+      height: 100%;
+      background-color: #1c355a;
+      border-radius: 4px;
+    }
+    .block {
+      background-color: #33cc33;
+      border-radius: 4px;
+      animation: pop 0.3s ease-in-out;
+    }
+    .piece-container {
+      margin-top: 30px;
+      display: flex;
+      gap: 20px;
+    }
+    .piece {
+      display: grid;
+      grid-template-columns: repeat(3, 30px);
+      grid-template-rows: repeat(3, 30px);
+      gap: 2px;
+    }
+    .piece div {
+      width: 30px;
+      height: 30px;
+      border-radius: 4px;
+      background-color: transparent;
+    }
+    .filled {
+      background-color: #33cc33;
+    }
+    @keyframes pop {
+      0% { transform: scale(0.8); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Block Viking</h1>
-    <div class="subtitle">Pilih mode permainan</div>
-
-    <div class="game-options">
-      <div class="game-button" onclick="openGame('mode1')">Mode 1</div>
-      <div class="game-button" onclick="openGame('mode2')">Mode 2</div>
+  <div class="header">
+    <h1>BLOCK VIKING</h1>
+    <p>by Wilz</p>
+    <div class="button-container">
+      <button class="btn" onclick="startGame()">Start Game</button>
     </div>
+  </div>  <div class="game-board" id="board"></div>  <div class="piece-container" id="pieces">
+    <div class="piece" id="piece1"></div>
+    <div class="piece" id="piece2"></div>
+    <div class="piece" id="piece3"></div>
+  </div>  <script>
+    const board = document.getElementById('board');
+    const SIZE = 9;
+    let cells = [];
 
-    <!-- Mode 1 -->
-    <div id="mode1" class="game-section">
-      <h2>Mode 1: Blok Viking</h2>
-      <div id="blocks1"></div>
-      <div id="status1">Status: Menunggu...</div>
-      <button class="back-btn" onclick="backToMenu()">Kembali ke Menu</button>
-    </div>
+    const pieces = [
+      [[1, 1, 1], [0, 1, 0], [0, 0, 0]],
+      [[1, 0, 0], [1, 1, 1], [0, 0, 0]],
+      [[1, 1], [1, 1]]
+    ];
 
-    <!-- Mode 2 -->
-    <div id="mode2" class="game-section">
-      <h2>Mode 2: Blok Viking</h2>
-      <div id="blocks2"></div>
-      <div id="status2">Status: Menunggu...</div>
-      <button class="back-btn" onclick="backToMenu()">Kembali ke Menu</button>
-    </div>
-
-    <div class="footer">Dibuat oleh Wilz - 2025</div>
-  </div>
-
-  <script>
-    function openGame(mode) {
-      document.querySelector('.game-options').style.display = 'none';
-      document.getElementById(mode).classList.add('show');
-      initGame(mode);
-    }
-
-    function backToMenu() {
-      document.querySelector('.game-options').style.display = 'flex';
-      document.querySelectorAll('.game-section').forEach(section => section.classList.remove('show'));
-    }
-
-    function initGame(mode) {
-      const blocksContainer = document.getElementById('blocks' + mode.charAt(mode.length - 1));
-      blocksContainer.innerHTML = '';
-      const blockCount = mode === 'mode1' ? 5 : 6;
-      for (let i = 0; i < blockCount; i++) {
-        const block = document.createElement('div');
-        block.classList.add('block');
-        block.textContent = i + 1;
-        block.onclick = () => handleBlockClick(block, mode);
-        blocksContainer.appendChild(block);
+    function createBoard() {
+      board.innerHTML = '';
+      cells = [];
+      for (let i = 0; i < SIZE * SIZE; i++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        board.appendChild(cell);
+        cells.push(cell);
       }
-      document.getElementById('status' + mode.charAt(mode.length - 1)).textContent = 'Status: Siap!';
     }
 
-    function handleBlockClick(block, mode) {
-      const statusElement = document.getElementById('status' + mode.charAt(mode.length - 1));
-      statusElement.textContent = 'Status: Blok ' + block.textContent + ' diklik!';
-      block.style.backgroundColor = '#4CAF50';
-      setTimeout(() => {
-        block.style.backgroundColor = '#fff';
-        statusElement.textContent = 'Status: Menunggu...';
-      }, 1000);
+    function renderPiece(matrix, containerId) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+      for (let row = 0; row < 3; row++) {
+        for (let col = 0; col < 3; col++) {
+          const cell = document.createElement('div');
+          if (matrix[row] && matrix[row][col]) {
+            cell.classList.add('filled');
+          }
+          container.appendChild(cell);
+        }
+      }
     }
-  </script>
-</body>
+
+    function placeInitialBlocks() {
+      for (let i = 0; i < 20; i++) {
+        const index = Math.floor(Math.random() * SIZE * SIZE);
+        cells[index].classList.add('block');
+      }
+    }
+
+    function startGame() {
+      createBoard();
+      placeInitialBlocks();
+      renderPiece(pieces[0], 'piece1');
+      renderPiece(pieces[1], 'piece2');
+      renderPiece(pieces[2], 'piece3');
+    }
+
+    window.onload = createBoard;
+  </script></body>
 </html>
